@@ -1,30 +1,24 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from .models import Contato
+from django.core.paginator import Paginator
 
 
-# Create your views here.
 def index(request):
     contatos = Contato.objects.all()
+    paginator = Paginator(contatos, 5)
+
+    page = request.GET.get('p')
+    contatos = paginator.get_page(page)
+
     return render(request, 'contatos/index.html', {
         'contatos': contatos
     })
 
 
-# Create your views here.
 def ver_contato(request, contato_id):
     # contato = Contato.objects.get(id=contato_id)
     contato = get_object_or_404(Contato, id=contato_id)
     return render(request, 'contatos/ver_contato.html', {
         'contato': contato
     })
-
-# # Create your views here.
-# def ver_contato(request, contato_id):
-#     try:
-#         contato = Contato.objects.get(id=contato_id)
-#         return render(request, 'contatos/ver_contato.html', {
-#             'contato': contato
-#         })
-#     except Contato.DoesNotExist as e:
-#         raise Http404()
