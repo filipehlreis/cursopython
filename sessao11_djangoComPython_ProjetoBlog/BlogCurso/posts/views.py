@@ -103,7 +103,7 @@ class PostDetalhes(View):
 
         return redirect('post_detalhes', pk=self.kwargs.get('pk'))
 
-    
+
 
 # class PostDetalhes(UpdateView):
 #     template_name = 'posts/post_detalhes.html'
