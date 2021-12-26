@@ -1,5 +1,5 @@
 """
-Na programacao POO, o termo factory (fabrica) refere-se a uma classe ou metodo 
+Na programacao POO, o termo factory (fabrica) refere-se a uma classe ou metodo
 que é responsavel por criar objetos.
 
 Vantagens:
@@ -9,7 +9,7 @@ Vantagens:
     Facilitam a adicao de novas classes ao codigo, porque o cliente nao conhece
     e nem utiliza a implementacao da classe (utiliza a factory).
 
-    Podem facilitar o processo de "cache" ou criacao de "singletons" porque a 
+    Podem facilitar o processo de "cache" ou criacao de "singletons" porque a
     fabrica pode retornar um objeto já criado para o cliente, ao inves de criar
     novos objetos sempre que o cliente precisar.
 

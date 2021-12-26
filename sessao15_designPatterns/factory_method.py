@@ -1,27 +1,9 @@
 """
-Na programacao POO, o termo factory (fabrica) refere-se a uma classe ou metodo
-que é responsavel por criar objetos.
+Factory method é um padrao de criacao que permite definir uma interface para
+criar objetos, mas deixa as subclasses decidirem quais objetos criar. O Factory
+method permite adiar a instanciacao para as subclasses, garantindo o baixo
+acoplamento entre classes.
 
-Vantagens:
-    Permitem criar um sitema com baixo acoplamento entre classes porque ocultam
-    as classes que criam os objetos do codigo cliente.
-
-    Facilitam a adicao de novas classes ao codigo, porque o cliente nao conhece
-    e nem utiliza a implementacao da classe (utiliza a factory).
-
-    Podem facilitar o processo de "cache" ou criacao de "singletons" porque a
-    fabrica pode retornar um objeto já criado para o cliente, ao inves de criar
-    novos objetos sempre que o cliente precisar.
-
-Desvantagens:
-    Podem introduzir muitas classes no codigo.
-
-Vamos ver 2 tipos de Factory da GoF: Factory method e Abstract Factory.
-
-Nessa aula:
-    Simple Factory <- Uma especie de Factory Method parametrizado
-    Simple Factory pode nao ser considerado um padrao de projeto por si so
-    Simple Factory pode quebrar principios do SOLID
 """
 from abc import ABC, abstractmethod
 
@@ -56,6 +38,14 @@ class VeiculoFactory:
         self.carro = self.get_carro(tipo)
 
     @staticmethod
+    def get_carro(tipo: str) -> Veiculo: pass
+
+    def buscar_cliente(self):
+        self.carro.buscar_cliente()
+
+
+class ZonaNorteVeiculoFactory(VeiculoFactory):
+    @staticmethod
     def get_carro(tipo: str) -> Veiculo:
         if tipo == 'luxo':
             return CarroLuxo()
@@ -67,14 +57,33 @@ class VeiculoFactory:
             return MotoLuxo()
         assert 0, 'Veiculo nao existe'
 
-    def buscar_cliente(self):
-        self.carro.buscar_cliente()
+
+class ZonaSulVeiculoFactory(VeiculoFactory):
+    @staticmethod
+    def get_carro(tipo: str) -> Veiculo:
+
+        if tipo == 'popular':
+            return CarroPopular()
+
+        assert 0, 'Veiculo nao existe'
 
 
 if __name__ == "__main__":
+
     from random import choice
-    carros_disponiveis = ['luxo', 'popular', 'moto', 'moto_luxo']
+    veiculos_disponiveis_zona_norte = ['luxo', 'popular', 'moto', 'moto_luxo']
+    veiculos_disponiveis_zona_sul = ['popular']
+
+    print('ZONA NORTE')
+    for i in range(10):
+        carro = ZonaNorteVeiculoFactory(
+            choice(veiculos_disponiveis_zona_norte))
+        carro.buscar_cliente()
+
+    print()
+    print('ZONA SUL')
 
     for i in range(10):
-        carro = VeiculoFactory(choice(carros_disponiveis))
-        carro.buscar_cliente()
+        carro2 = ZonaSulVeiculoFactory(
+            choice(veiculos_disponiveis_zona_sul))
+        carro2.buscar_cliente()
