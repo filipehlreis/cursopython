@@ -1,20 +1,3 @@
-"""
-Decorator é um padrao de projeto estrutural que permite que voce adicione novos
-comportamentos em objetos ao coloca-los dentro de um 'wrapper' (decorador)
-de objetos.
-Decoradores fornecem uma alternativa flexivel ao uso de subclasses para a
-extensao de funcionalidades.
-
-Decorator (padrao de projeto) != Decorator em Python
-
-Python decorator -> Um decorator é um callable que aceita outra funcao como
-argumento (a funcao decorada). O Decorator pode realizar algum processamento
-com a funcao decorada e devolve-la ou substitui-la por outra funcao ou objeto
-invocavel.
-Do livro "Python Fluente", por Luciano Ramalho (pag. 223)
-
-"""
-
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import List
@@ -119,50 +102,31 @@ class SpecialHotdog (Hotdog):
 #######################
 
 class HotdogDecorator(Hotdog):
-    def __init__(self, hotdog: Hotdog) -> None:
+    def __init__(self, hotdog: Hotdog, ingredient: Ingredient) -> None:
         self.hotdog = hotdog
+        self._ingredient = ingredient
 
-    @property
-    def price(self) -> float:
-        return self.hotdog.price
-
-    @property
-    def name(self) -> str:
-        return self.hotdog.name
-
-    @property
-    def ingredients(self) -> List[Ingredient]:
-        return self.hotdog.ingredients
-
-
-class BaconDecorator(HotdogDecorator):
-    def __init__(self, hotdog: Hotdog) -> None:
-        super().__init__(hotdog)
-        self._ingredient = Bacon()
         self._ingredients = deepcopy(self.hotdog.ingredients)
         self._ingredients.append(self._ingredient)
-
-    @property
-    def price(self) -> float:
-        return round(sum([
-            ingredient.price for ingredient in self._ingredients
-        ]), 2)
 
     @property
     def name(self) -> str:
         return f"{self.hotdog.name} + {self._ingredient.__class__.__name__}"
 
-    @property
-    def ingredients(self) -> List[Ingredient]:
-        return self._ingredients
-
 
 if __name__ == "__main__":
     simple_hotdog = SimpleHotdog()
-    decorated_simple_hotdog = HotdogDecorator(simple_hotdog)
-    bacon_simple_hotdog = BaconDecorator(simple_hotdog)
-    bacon_simple_hotdog = BaconDecorator(bacon_simple_hotdog)
-
     print(simple_hotdog)
-    print(decorated_simple_hotdog)
+    print()
+
+    bacon_simple_hotdog = HotdogDecorator(simple_hotdog, Bacon())
     print(bacon_simple_hotdog)
+    print()
+
+    egg_bacon_simple_hotdog = HotdogDecorator(bacon_simple_hotdog, Egg())
+    print(egg_bacon_simple_hotdog)
+    print()
+
+    mashed_potato_egg_bacon_simple_hotdog = HotdogDecorator(
+        egg_bacon_simple_hotdog, MashedPotatoes())
+    print(mashed_potato_egg_bacon_simple_hotdog)
